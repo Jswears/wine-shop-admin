@@ -17,34 +17,59 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { WinesProps } from "@/types";
-import { useState } from "react";
+import { oneWineProps } from "@/types";
+import React, { useState } from "react";
 import { Textarea } from "../ui/textarea";
 
 const FormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  price: z.coerce.number().positive({
-    message: "Price must be a positive number.",
-  }),
-  desc: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
-  vintage: z.coerce.number().min(1900).max(2021),
-  winery: z.string().min(2, {
-    message: "Winery must be at least 2 characters.",
-  }),
-  country: z.string().min(2, {
-    message: "Country must be at least 2 characters.",
-  }),
-  image: z.string().url({
-    message: "Image must be a valid URL.",
-  }),
+  name: z
+    .string()
+    .min(2, {
+      message: "Name must be at least 2 characters.",
+    })
+    .optional(),
+  price: z.coerce
+    .number()
+    .positive({
+      message: "Price must be a positive number.",
+    })
+    .optional(),
+  desc: z
+    .string()
+    .min(10, {
+      message: "Description must be at least 10 characters.",
+    })
+    .optional(),
+  vintage: z.coerce.number().min(1900).max(2021).optional(),
+  winery: z
+    .string()
+    .min(2, {
+      message: "Winery must be at least 2 characters.",
+    })
+    .optional(),
+  country: z
+    .string()
+    .min(2, {
+      message: "Country must be at least 2 characters.",
+    })
+    .optional(),
+  image: z
+    .string()
+    .url({
+      message: "Image must be a valid URL.",
+    })
+    .optional(),
 });
 
-export default function AddWineForm() {
+export default function EditWineForm({ oneWine }: oneWineProps) {
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState(oneWine?.name);
+  const [price, setPrice] = useState(oneWine?.price);
+  const [desc, setDesc] = useState(oneWine?.desc);
+  const [vintage, setVintage] = useState(oneWine?.vintage);
+  const [winery, setWinery] = useState(oneWine?.winery);
+  const [country, setCountry] = useState(oneWine?.country);
+  const [image, setImage] = useState(oneWine?.image);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -53,13 +78,12 @@ export default function AddWineForm() {
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://localhost:5005/api/new-wine",
-        values
+      const body = { name, price, desc, vintage, winery, country, image };
+      const response = await axios.patch(
+        `http://localhost:5005/api/wines/${oneWine._id}`,
+        body
       );
-      if (response.status === 201) {
-        window.location.assign(`/products/all-products`);
-      }
+      window.location.assign(`/products/all-products`);
     } catch (error) {
       toast.error("Something went wrong, please try again.");
     } finally {
@@ -77,7 +101,11 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Fume Blanc..." {...field} />
+                <Input
+                  {...field}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
               </FormControl>
               <FormDescription>Add the wine&apos;s name</FormDescription>
               <FormMessage />
@@ -91,7 +119,12 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Price</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="22.00$" {...field} />
+                <Input
+                  type="number"
+                  {...field}
+                  value={price}
+                  onChange={(e) => setPrice(parseInt(e.target.value))}
+                />
               </FormControl>
               <FormDescription>Add the wine&apos;s name</FormDescription>
               <FormMessage />
@@ -105,7 +138,12 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Description" id="message" {...field} />
+                <Textarea
+                  id="message"
+                  {...field}
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
               </FormControl>
               <FormDescription>Add a description</FormDescription>
               <FormMessage />
@@ -119,7 +157,12 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Vintage</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="2005..." {...field} />
+                <Input
+                  type="number"
+                  {...field}
+                  value={vintage}
+                  onChange={(e) => setVintage(parseInt(e.target.value))}
+                />
               </FormControl>
               <FormDescription>Add the vintage</FormDescription>
               <FormMessage />
@@ -133,7 +176,11 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Winery</FormLabel>
               <FormControl>
-                <Input placeholder="Tement..." {...field} />
+                <Input
+                  {...field}
+                  value={winery}
+                  onChange={(e) => setWinery(e.target.value)}
+                />
               </FormControl>
               <FormDescription>Add the winery</FormDescription>
               <FormMessage />
@@ -147,7 +194,11 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Country</FormLabel>
               <FormControl>
-                <Input placeholder="Italy..." {...field} />
+                <Input
+                  {...field}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
               </FormControl>
               <FormDescription>Add the country</FormDescription>
               <FormMessage />
@@ -174,7 +225,7 @@ export default function AddWineForm() {
           )}
         />
 
-        <Button type="submit">Add Wine</Button>
+        <Button type="submit">Edit Wine</Button>
       </form>
     </Form>
   );

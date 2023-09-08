@@ -5,23 +5,38 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { Button } from "./ui/button";
 
 const WineCard = () => {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [wines, setWines] = useState<WinesProps[]>([]);
 
   const getWines = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const response = await axios.get("http://localhost:5005/api/wines");
       setWines(response.data);
     } catch (error) {
       toast.error("Error fetching wines");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const deleteWine = async (id: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.delete(
+        `http://localhost:5005/api/wines/${id}`
+      );
+      toast.success("Wine deleted");
+      setWines((prevWines) => prevWines.filter((wine) => wine._id !== id));
+    } catch (error) {
+      toast.error("Error fetching wines");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
     getWines();
   }, []);
@@ -32,26 +47,33 @@ const WineCard = () => {
         <div className="box w-64" key={wine._id}>
           <div className="content flex flex-col justify-cente items-center">
             <div className="product-image bg-slate-100 w-64">
-              <Link href="/shop/wines">
-                <Image
-                  className="m-auto object-contain"
-                  src="/2020-Santa-Cruz-de-Coya-RH5220.png"
-                  alt={wine.name}
-                  width={800}
-                  height={1300}
-                  style={{ height: "310px", width: "190px" }}
-                ></Image>
-              </Link>
+              <Image
+                className="m-auto object-contain"
+                src="/2020-Santa-Cruz-de-Coya-RH5220.png"
+                alt={wine.name}
+                width={800}
+                height={1300}
+                style={{ height: "310px", width: "190px" }}
+              ></Image>
             </div>
-            <Link
-              href={`/shop/wines/${wine._id}`}
-              className="border-b-2 w-full"
-            >
-              <h2 className="product-name text-center">
-                {`${wine.vintage} ${wine.name}`}
-              </h2>
-            </Link>
+
+            <h2 className="product-name text-center">
+              {`${wine.vintage} ${wine.name}`}
+            </h2>
             <p>{wine.price}$</p>
+          </div>
+          <div className="flex justify-center gap-2">
+            <Button variant={"secondary"} size="sm">
+              <Link href={`/products/all-products/${wine._id}`}>View</Link>
+            </Button>
+            <Button
+              variant={"destructive"}
+              size="sm"
+              onClick={() => deleteWine(wine._id)}
+              disabled={isLoading}
+            >
+              {isLoading ? "Deleting..." : "Delete"}
+            </Button>
           </div>
         </div>
       ))}
