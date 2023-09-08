@@ -18,10 +18,10 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="relative h-screen flex">
+    <div className="relative flex min-h-screen">
       <aside
         id="default-sidebar"
-        className={`relative p-2 top-0 left-0 z-40 h-screen duration-300 ${
+        className={`relative p-2 top-0 left-0 z-40 duration-300 ${
           !open ? "w-20" : "w-64"
         } sm:translate-x-0 bg-gray-50 dark:bg-gray-800`}
         aria-label="Sidebar"
@@ -54,7 +54,7 @@ export default function Sidebar() {
             </li>
             <li>
               <Link
-                href="/products"
+                href="/products/all-products"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -72,6 +72,30 @@ export default function Sidebar() {
                   }`}
                 >
                   Products
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/products/add-product"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <svg
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  aria-hidden="true"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 448 512"
+                >
+                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                </svg>
+                <span
+                  className={`flex-1 ml-3 whitespace-nowrap ${
+                    !open && "hidden"
+                  }`}
+                >
+                  Add Product
                 </span>
               </Link>
             </li>

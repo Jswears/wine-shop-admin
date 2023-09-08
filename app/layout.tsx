@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className="flex">
+        <body className="flex h-full">
           {}
           <Sidebar />
           {children}

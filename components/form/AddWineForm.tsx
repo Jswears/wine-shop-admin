@@ -3,7 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
 
+import toast, { Toaster } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,18 +17,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { WinesProps } from "@/types";
+import { useState } from "react";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  price: z.number().positive({
+  price: z.coerce.number().positive({
     message: "Price must be a positive number.",
   }),
   desc: z.string().min(10, {
     message: "Description must be at least 10 characters.",
   }),
-  vintage: z.number().min(1900).max(2021),
+  vintage: z.coerce.number().min(1900).max(2021),
   winery: z.string().min(2, {
     message: "Winery must be at least 2 characters.",
   }),
@@ -39,11 +43,28 @@ const FormSchema = z.object({
 });
 
 export default function AddWineForm() {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+  async function onSubmit(values: z.infer<typeof FormSchema>) {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://localhost:5005/api/new-wine",
+        values
+      );
+      if (response.status === 201) {
+        window.location.assign(`/products/all-products`);
+      }
+    } catch (error) {
+      toast.error("Something went wrong, please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Form {...form}>
@@ -56,6 +77,20 @@ export default function AddWineForm() {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input placeholder="Fume Blanc..." {...field} />
+              </FormControl>
+              <FormDescription>Add the wine&apos;s name</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="22.00$" {...field} />
               </FormControl>
               <FormDescription>Add the wine&apos;s name</FormDescription>
               <FormMessage />
@@ -83,7 +118,7 @@ export default function AddWineForm() {
             <FormItem>
               <FormLabel>Vintage</FormLabel>
               <FormControl>
-                <Input placeholder="2005..." {...field} />
+                <Input type="number" placeholder="2005..." {...field} />
               </FormControl>
               <FormDescription>Add the vintage</FormDescription>
               <FormMessage />
