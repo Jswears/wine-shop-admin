@@ -11,7 +11,6 @@ export default function Sidebar() {
   const toggleSidebar = () => {
     setOpen(!open);
   };
-  console.log(open);
 
   if (!isLoaded || !isSignedIn) {
     return null;

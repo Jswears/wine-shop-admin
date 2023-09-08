@@ -38,9 +38,12 @@ const FormSchema = z.object({
   country: z.string().min(2, {
     message: "Country must be at least 2 characters.",
   }),
-  image: z.string().url({
-    message: "Image must be a valid URL.",
-  }),
+  image: z
+    .string()
+    .url({
+      message: "Image must be a valid URL.",
+    })
+    .optional(),
 });
 
 export default function AddWineForm() {

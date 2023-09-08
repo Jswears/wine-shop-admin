@@ -15,7 +15,6 @@ export default function WineDetailsPage({
 }) {
   const [oneWine, setOneWine] = useState<WinesProps | undefined>(undefined);
 
-
   const getOneWine = async () => {
     try {
       const response = await axios.get(
@@ -39,6 +38,7 @@ export default function WineDetailsPage({
   return (
     <>
       <div className="w-full">
+        <h1 className="text-2xl font-semibold">Edit the wine</h1>
         <Button variant={"link"}>
           <Link href={`/products/all-products`}>Go back to the wines</Link>{" "}
         </Button>
