@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { set } from "react-hook-form";
 
 const WineCard = () => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +29,7 @@ const WineCard = () => {
   return (
     <div className="grid  lg:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 gap-6 mt-20">
       {wines.map((wine) => (
-        <div className="box w-64" key={wine.name}>
+        <div className="box w-64" key={wine._id}>
           <div className="content flex flex-col justify-cente items-center">
             <div className="product-image bg-slate-100 w-64">
               <Link href="/shop/wines">
