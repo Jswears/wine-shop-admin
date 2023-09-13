@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import EditWineForm from "@/components/form/EditWineForm";
-import { WinesProps, oneWineProps } from "@/types";
+import { WinesProps} from "@/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -43,7 +43,7 @@ export default function WineDetailsPage({
           <Link href={`/products/all-products`}>Go back to the wines</Link>{" "}
         </Button>
         <Image
-          src="/2020-Santa-Cruz-de-Coya-RH5220.png"
+          src={oneWine.image}
           alt="wine"
           width={800}
           height={1300}

@@ -4,22 +4,17 @@ export interface WinesProps {
   price: number;
   image: string;
   desc: string;
-  vintage: number;
+  vintage: string;
   winery: string;
   country: string;
+  region: string;
+  grape: string;
+  category: string;
+  stock: number;
 }
 
-export interface oneWineProps {
-  oneWine: {
-    _id: string;
-    name: string;
-    price: number;
-    image: string;
-    desc: string;
-    vintage: number;
-    winery: string;
-    country: string;
-  };
+export interface ChildWinesProps {
+  wines: WinesProps[];
 }
 
 export interface WineMap {

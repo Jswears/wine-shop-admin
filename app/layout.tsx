@@ -17,7 +17,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className="flex h-full">
-          {}
           <Sidebar />
           {children}
         </body>
